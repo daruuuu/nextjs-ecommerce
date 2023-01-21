@@ -6,6 +6,8 @@ import Image from "next/image";
 import { XCircleIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/router";
 import EmptyCart from "@/components/EmptyCart/EmptyCart";
+import dynamic from "next/dynamic";
+
 const CartPage = () => {
   const { state, dispatch } = useContext(Store);
   const router = useRouter();
@@ -16,6 +18,11 @@ const CartPage = () => {
 
   const removeHandler = (item) => {
     dispatch({ type: "CART_REMOVE_ITEM", payload: item });
+  };
+
+  const updateCartHandler = (item, value) => {
+    const qty = Number(value);
+    dispatch({ type: "CART_ADD_ITEM", payload: { ...item, qty } });
   };
 
   return (
@@ -52,8 +59,23 @@ const CartPage = () => {
                         </div>
                       </Link>
                     </td>
-                    <td className="p-5 text-right">{item.qty}</td>
-                    <td className="p-5 text-right">${item.price}</td>
+                    <td className="p-5 text-right">
+                      <select
+                        name="qty"
+                        id="qty"
+                        value={item.qty}
+                        onChange={(event) =>
+                          updateCartHandler(item, event.target.value)
+                        }
+                      >
+                        {[...Array(item.countInStock).keys()].map((x) => (
+                          <option key={x + 1} value={x + 1}>
+                            {x + 1}
+                          </option>
+                        ))}
+                      </select>
+                    </td>
+                    <td className="p-5 text-right">${item.price * item.qty}</td>
                     <td className="p-5 text-center">
                       <button onClick={() => removeHandler(item)}>
                         <XCircleIcon className="h-5 w-5" />
@@ -88,4 +110,4 @@ const CartPage = () => {
   );
 };
 
-export default CartPage;
+export default dynamic(() => Promise.resolve(CartPage), { ssr: false });
