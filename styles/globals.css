@@ -26,3 +26,13 @@ a {
 .primary-button {
   @apply bg-amber-500 py-2 px-4 shadow outline-none hover:bg-amber-300 active:bg-amber-600 rounded-md;
 }
+
+input,
+select,
+textarea {
+  @apply rounded border p-2 outline-none ring-gray-600 focus:ring;
+}
+
+.dropdown-link {
+  @apply flex p-2 hover:bg-gray-400;
+}
