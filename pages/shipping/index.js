@@ -9,7 +9,8 @@ import { useRouter } from "next/router";
 const Shipping = () => {
   const { state, dispatch } = useContext(Store);
   const router = useRouter();
-  const { shippingAddress } = state.cart;
+  const { cart } = state;
+  const { shippingAddress } = cart;
 
   const {
     handleSubmit,
@@ -17,6 +18,15 @@ const Shipping = () => {
     formState: { errors },
     setValue,
   } = useForm();
+
+  useEffect(() => {
+    setValue("fullName", shippingAddress.fullName);
+    setValue("address", shippingAddress.address);
+    setValue("city", shippingAddress.city);
+    setValue("postalCode", shippingAddress.postalCode);
+    setValue("country", shippingAddress.country);
+    setValue("phone", shippingAddress.phone);
+  }, [setValue, shippingAddress]);
 
   const submitHandler = ({
     fullName,
@@ -35,13 +45,12 @@ const Shipping = () => {
         postalCode,
         country,
         phone,
-        location,
       },
     });
     Cookies.set(
       "cart",
       JSON.stringify({
-        ...state.cart,
+        ...cart,
         shippingAddress: {
           fullName,
           address,
@@ -54,15 +63,6 @@ const Shipping = () => {
     );
     router.push("/payment");
   };
-
-  useEffect(() => {
-    setValue("fullName", shippingAddress.fullName);
-    setValue("address", shippingAddress.address);
-    setValue("city", shippingAddress.city);
-    setValue("postalCode", shippingAddress.postalCode);
-    setValue("country", shippingAddress.country);
-    setValue("phone", shippingAddress.phone);
-  }, [setValue, shippingAddress]);
 
   return (
     <Layout title="Shipping">

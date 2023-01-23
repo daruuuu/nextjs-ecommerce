@@ -10,8 +10,8 @@ const Payment = () => {
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("");
   const router = useRouter();
   const { state, dispatch } = useContext(Store);
-
-  const { shippingAddress, paymentMethod } = state.cart;
+  const { cart } = state;
+  const { shippingAddress, paymentMethod } = cart;
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -21,7 +21,7 @@ const Payment = () => {
     dispatch({ type: "SAVE_PAYMENT_METHOD", payload: selectedPaymentMethod });
     Cookies.set(
       "cart",
-      JSON.stringify({ ...state.cart, paymentMethod: selectedPaymentMethod })
+      JSON.stringify({ ...cart, paymentMethod: selectedPaymentMethod })
     );
     router.push("/placeorder");
   };
@@ -67,5 +67,7 @@ const Payment = () => {
     </Layout>
   );
 };
+
+Payment.auth = true;
 
 export default Payment;

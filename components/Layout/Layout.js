@@ -36,7 +36,7 @@ const Layout = (props) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <ToastContainer position="top-right" limit={1} />
+      <ToastContainer position="top-center" limit={1} />
 
       <div className="flex min-h-screen flex-col justify-between ">
         <header>
