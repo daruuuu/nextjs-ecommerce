@@ -1,4 +1,5 @@
 import Layout from "@/components/Layout/Layout";
+import Loading from "@/components/Loading/Loading";
 import { getError } from "@/utils/error";
 import { ArrowLongRightIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
@@ -49,7 +50,7 @@ const OrderHistory = () => {
     <Layout title="Order History">
       <h1 className="mb-4 text-xl">Order History</h1>
       {loading ? (
-        <div>Loading...</div>
+        <Loading />
       ) : error ? (
         <div className="alert-error">{error}</div>
       ) : (

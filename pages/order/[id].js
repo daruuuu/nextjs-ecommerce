@@ -7,6 +7,7 @@ import React, { useEffect, useReducer } from "react";
 import { toast } from "react-toastify";
 import Layout from "@/components/Layout/Layout";
 import { getError } from "@/utils/error";
+import Loading from "@/components/Loading/Loading";
 
 function reducer(state, action) {
   switch (action.type) {
@@ -129,7 +130,7 @@ const Order = () => {
     <Layout title={`Order ${orderId}`}>
       <h1 className="mb-4 text-xl">{`Order ${orderId}`}</h1>
       {loading ? (
-        <div>Loading...</div>
+        <Loading />
       ) : error ? (
         <div className="alert-error">{error}</div>
       ) : (

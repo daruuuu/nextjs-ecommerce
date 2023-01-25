@@ -5,7 +5,7 @@ import { getSession } from "next-auth/react";
 const handler = async (req, res) => {
   const session = await getSession({ req });
   if (!session) {
-    res.status(401).send({ messsage: "Unauthorized" });
+    res.status(401).send({ message: "Unauthorized" });
   }
   const { user } = session;
   await db.connect();

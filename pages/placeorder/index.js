@@ -1,6 +1,6 @@
 import CheckoutWizard from "@/components/CheckoutWizard/CheckoutWizard";
 import Layout from "@/components/Layout/Layout";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import EmptyCart from "@/components/EmptyCart/EmptyCart";
 import { Store } from "@/utils/Store";
 import Link from "next/link";
@@ -24,12 +24,6 @@ const PlaceOrder = () => {
   const shippingPrice = itemsPrice > 100 ? 0 : 10;
   const taxPrice = round2(0.15 * itemsPrice);
   const totalPrice = round2(itemsPrice + shippingPrice + taxPrice);
-
-  //   useEffect(() => {
-  //     if (!paymentMethod) {
-  //       router.push("/payment");
-  //     }
-  //   }, [paymentMethod, router]);
 
   const placeOrderHandler = async () => {
     try {
