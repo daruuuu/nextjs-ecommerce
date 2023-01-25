@@ -69,7 +69,7 @@ const Layout = (props) => {
                     <Menu.Item>
                       <DropdownLink
                         className="dropdown-link"
-                        href="/order-history"
+                        href="/order/history"
                       >
                         Order History
                       </DropdownLink>
