@@ -15,6 +15,8 @@ const Layout = (props) => {
   const { state, dispatch } = useContext(Store);
   const { cart } = state;
 
+  console.log(session);
+
   const [cartItemsTotal, setCartItemsTotal] = useState(0);
 
   useEffect(() => {
@@ -74,6 +76,16 @@ const Layout = (props) => {
                         Order History
                       </DropdownLink>
                     </Menu.Item>
+                    {session.user.isAdmin && (
+                      <Menu.Item>
+                        <DropdownLink
+                          className="dropdown-link"
+                          href="/admin/dashboard"
+                        >
+                          Admin Dashboard
+                        </DropdownLink>
+                      </Menu.Item>
+                    )}
                     <Menu.Item>
                       <a
                         className="dropdown-link"

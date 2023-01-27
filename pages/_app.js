@@ -1,3 +1,4 @@
+import Loading from "@/components/Loading/Loading";
 import "@/styles/globals.css";
 import { StoreProvider } from "@/utils/Store";
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
@@ -15,7 +16,7 @@ export default function App({
         <NextNProgress color="linear-gradient(90deg, #b656cb, #10a1a0)" />
         <PayPalScriptProvider deferLoading={true}>
           {Component.auth ? (
-            <Auth>
+            <Auth adminOnly={Component.auth.adminOnly}>
               <Component {...pageProps} />
             </Auth>
           ) : (
@@ -23,20 +24,24 @@ export default function App({
           )}
         </PayPalScriptProvider>
       </StoreProvider>
+      =
     </SessionProvider>
   );
 }
 
-const Auth = ({ children }) => {
+const Auth = ({ children, adminOnly }) => {
   const router = useRouter();
-  const { status } = useSession({
+  const { status, data: session } = useSession({
     required: true,
     onUnauthenticated() {
       router.push("/unauthorized?message=You must login first");
     },
   });
   if (status === "loading") {
-    return <div>Loading...</div>;
+    return <Loading />;
+  }
+  if (adminOnly && !session.user.isAdmin) {
+    router.push("/unauthorized?message=You are not authorized");
   }
   return children;
 };

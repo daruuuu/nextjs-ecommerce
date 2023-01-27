@@ -88,8 +88,6 @@ const Order = () => {
     totalPrice,
   } = order;
 
-  console.log(order);
-
   const createOrder = (data, actions) => {
     return actions.order
       .create({
