@@ -5,28 +5,11 @@ import { ArrowLongRightIcon } from "@heroicons/react/24/outline";
 import axios from "axios";
 import Link from "next/link";
 import React, { useEffect, useReducer } from "react";
-
-const orderhistoryreducer = (state, action) => {
-  switch (action.type) {
-    case "FETCH_REQUEST":
-      return { ...state, loading: true, error: "" };
-    case "FETCH_SUCCESS":
-      return {
-        ...state,
-        loading: false,
-        orderHistory: action.payload,
-        error: "",
-      };
-    case "FETCH_FAIL":
-      return { ...state, loading: false, error: action.payload };
-    default:
-      state;
-  }
-};
+import { orderHistoryReducer } from "@/utils/reducer";
 
 const OrderHistory = () => {
   const [{ loading, error, orderHistory }, dispatch] = useReducer(
-    orderhistoryreducer,
+    orderHistoryReducer,
     {
       loading: true,
       orderHistory: [],

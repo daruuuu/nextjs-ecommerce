@@ -8,28 +8,7 @@ import { toast } from "react-toastify";
 import Layout from "@/components/Layout/Layout";
 import { getError } from "@/utils/error";
 import Loading from "@/components/Loading/Loading";
-
-function reducer(state, action) {
-  switch (action.type) {
-    case "FETCH_REQUEST":
-      return { ...state, loading: true, error: "" };
-    case "FETCH_SUCCESS":
-      return { ...state, loading: false, order: action.payload, error: "" };
-    case "FETCH_FAIL":
-      return { ...state, loading: false, error: action.payload };
-    case "PAY_REQUEST":
-      return { ...state, loadingPay: true };
-    case "PAY_SUCCESS":
-      return { ...state, loadingPay: false, successPay: true };
-    case "PAY_FAIL":
-      return { ...state, loadingPay: false, errorPay: action.payload };
-    case "PAY_RESET":
-      return { ...state, loadingPay: false, successPay: false, errorPay: "" };
-
-    default:
-      state;
-  }
-}
+import { payReducer } from "@/utils/reducer";
 
 const Order = () => {
   const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
@@ -37,7 +16,7 @@ const Order = () => {
   const orderId = query.id;
 
   const [{ loading, error, order, successPay, loadingPay }, dispatch] =
-    useReducer(reducer, {
+    useReducer(payReducer, {
       loading: true,
       order: {},
       error: "",

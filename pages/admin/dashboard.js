@@ -14,6 +14,7 @@ import {
 import { Bar } from "react-chartjs-2";
 import axios from "axios";
 import { getError } from "@/utils/error";
+import { dashboardReducer } from "@/utils/reducer";
 
 ChartJS.register(
   CategoryScale,
@@ -31,19 +32,6 @@ export const options = {
       position: "top",
     },
   },
-};
-
-const dashboardReducer = (state, action) => {
-  switch (action.type) {
-    case "FETCH_REQUEST":
-      return { ...state, loading: true, error: "" };
-    case "FETCH_SUCCESS":
-      return { ...state, loading: false, summary: action.payload, error: "" };
-    case "FETCH_FAIL":
-      return { ...state, loading: false, error: action.payload };
-    default:
-      return state;
-  }
 };
 
 const AdminDashboard = () => {
