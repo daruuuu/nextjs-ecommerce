@@ -13,6 +13,8 @@ const Orders = () => {
     error: "",
   });
 
+  console.log(orders);
+
   useEffect(() => {
     const fetchData = async () => {
       try {

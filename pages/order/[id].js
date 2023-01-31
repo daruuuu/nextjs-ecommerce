@@ -9,18 +9,30 @@ import Layout from "@/components/Layout/Layout";
 import { getError } from "@/utils/error";
 import Loading from "@/components/Loading/Loading";
 import { payReducer } from "@/utils/reducer";
+import { useSession } from "next-auth/react";
 
 const Order = () => {
+  const { data: session } = useSession();
   const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
   const { query } = useRouter();
   const orderId = query.id;
 
-  const [{ loading, error, order, successPay, loadingPay }, dispatch] =
-    useReducer(payReducer, {
-      loading: true,
-      order: {},
-      error: "",
-    });
+  const [
+    {
+      loading,
+      error,
+      order,
+      successPay,
+      loadingPay,
+      loadingDeliver,
+      successDeliver,
+    },
+    dispatch,
+  ] = useReducer(payReducer, {
+    loading: true,
+    order: {},
+    error: "",
+  });
 
   useEffect(() => {
     const fetchOrder = async () => {
@@ -32,11 +44,19 @@ const Order = () => {
         dispatch({ type: "FETCH_FAIL", payload: getError(err) });
       }
     };
-    if (!order._id || successPay || (order._id && order._id !== orderId)) {
+    if (
+      !order._id ||
+      successPay ||
+      successDeliver ||
+      (order._id && order._id !== orderId)
+    ) {
       fetchOrder();
       if (successPay) {
         dispatch({ type: "PAY_RESET" });
       }
+      // if (successDeliver) {
+      //   dispatch({ type: "DELIVER_RESET" });
+      // }
     } else {
       const loadPaypalScript = async () => {
         const { data: clientId } = await axios.get("/api/keys/paypal");
@@ -51,7 +71,7 @@ const Order = () => {
       };
       loadPaypalScript();
     }
-  }, [order, orderId, paypalDispatch, successPay]);
+  }, [order, orderId, paypalDispatch, successPay, successDeliver]);
 
   const {
     shippingAddress,
@@ -101,6 +121,21 @@ const Order = () => {
 
   const onError = (err) => {
     toast.error(getError(err));
+  };
+
+  const deliverHandler = async () => {
+    try {
+      dispatch({ type: "DELIVER_REQUEST" });
+      const { data } = await axios.put(
+        `/api/admin/orders/${order._id}/deliver`,
+        {}
+      );
+      dispatch({ type: "DELIVER_SUCCESS", payload: data });
+      toast.success("Order Delivered");
+    } catch (err) {
+      dispatch({ type: "DELIVER_FAIL", payload: getError(err) });
+      toast.error(getError(err));
+    }
   };
 
   return (
@@ -217,6 +252,20 @@ const Order = () => {
                     )}
                     {loadingPay && (
                       <div className="alert-info">Processing Payment...</div>
+                    )}
+                  </li>
+                )}
+                {session.user.isAdmin && !order.isDelivered && (
+                  <li>
+                    {loadingDeliver ? (
+                      <Loading />
+                    ) : (
+                      <button
+                        className="primary-button w-full"
+                        onClick={deliverHandler}
+                      >
+                        Deliver Order
+                      </button>
                     )}
                   </li>
                 )}

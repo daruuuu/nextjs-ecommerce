@@ -14,6 +14,14 @@ export const payReducer = (state, action) => {
       return { ...state, loadingPay: false, errorPay: action.payload };
     case "PAY_RESET":
       return { ...state, loadingPay: false, successPay: false, errorPay: "" };
+    case "DELIVER_REQUEST":
+      return { ...state, loadingDeliver: true };
+    case "DELIVER_SUCCESS":
+      return { ...state, loadingDeliver: false, successDeliver: true };
+    case "DELIVER_FAIL":
+      return { ...state, loadingDeliver: false };
+    case "DELIVER_RESET":
+      return { ...state, loadingDeliver: false, successDeliver: false };
     default:
       state;
   }

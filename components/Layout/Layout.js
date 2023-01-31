@@ -14,9 +14,6 @@ const Layout = (props) => {
   const { status, data: session } = useSession();
   const { state, dispatch } = useContext(Store);
   const { cart } = state;
-
-  console.log(session);
-
   const [cartItemsTotal, setCartItemsTotal] = useState(0);
 
   useEffect(() => {
