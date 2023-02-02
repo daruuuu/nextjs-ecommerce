@@ -34,11 +34,26 @@ const handler = async (req, res) => {
       return res.status(404).send({ message: "Product update fail" });
     }
   };
+  const deleteHandler = async (req, res) => {
+    await db.connect();
+    const product = await Product.findById(req.query.id);
+    if (product) {
+      await product.remove();
+      await db.disconnect();
+      return res.send({ message: "Delete product success" });
+    } else {
+      await db.disconnect();
+      return res.status(404).send({ message: "Product delete fail" });
+    }
+  };
   if (req.method === "GET") {
     return getHandler(req, res, user);
   }
   if (req.method === "PUT") {
     return putHandler(req, res, user);
+  }
+  if (req.method === "DELETE") {
+    return deleteHandler(req, res, user);
   } else {
     return res.status(400).send({ message: "Method not allowed" });
   }

@@ -101,7 +101,7 @@ const ProductEdit = () => {
   };
 
   return (
-    <Layout title={`Edit Product ${productId}`}>
+    <Layout title={`Product ${productId}`}>
       <AdminLayout>
         {loading ? (
           <Loading />
@@ -112,7 +112,7 @@ const ProductEdit = () => {
             className="mx-auto max-w-screen-md"
             onSubmit={handleSubmit(submitHandler)}
           >
-            <h1 className="mb-4 text-xl">{`Edit Product ${productId}`}</h1>
+            <h1 className="mb-4 text-xl">{`Product ${productId}`}</h1>
             <div className="mb-4">
               <label htmlFor="name">Name</label>
               <input
@@ -241,7 +241,7 @@ const ProductEdit = () => {
             </div>
             <div className="mb-4 flex justify-between w-full ">
               <button disabled={loadingUpdate} className="primary-button">
-                {loadingUpdate ? "Loading" : "Update"}
+                {loadingUpdate ? "Loading" : "Confirm"}
               </button>
               <Link
                 className="border border-amber-500 py-2 px-4 shadow rounded-md"
