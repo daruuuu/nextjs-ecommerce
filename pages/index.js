@@ -7,7 +7,7 @@ import { Store } from "@/utils/Store";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-export default function Home({ productsList }) {
+export default function Home({ productsLists }) {
   const { state, dispatch } = useContext(Store);
 
   const addToCartHandler = async (productData) => {
@@ -28,7 +28,7 @@ export default function Home({ productsList }) {
   return (
     <Layout title="Home Page">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
-        {productsList.map((products) => (
+        {productsLists.map((products) => (
           <ProductItem
             addToCartHandler={addToCartHandler}
             product={products}
@@ -43,9 +43,10 @@ export default function Home({ productsList }) {
 export const getServerSideProps = async () => {
   await db.connect();
   const productsList = await Product.find().lean();
+  const productsLists = JSON.parse(JSON.stringify(productsList));
   return {
     props: {
-      productsList: productsList.map(db.convertDocToObj),
+      productsLists: productsLists.map(db.convertDocToObj),
     },
   };
 };

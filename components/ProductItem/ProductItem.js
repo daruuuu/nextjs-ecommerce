@@ -9,7 +9,7 @@ const ProductItem = ({ product, addToCartHandler }) => {
         <img
           src={product.image}
           alt={product.name}
-          className="rounded shadow max-h-80 w-full object-cover"
+          className="rounded shadow object-cover h-64 w-full"
         />
       </Link>
       <div className="flex flex-col items-center justify-center p-5">

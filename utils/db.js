@@ -33,6 +33,8 @@ const disconnect = async () => {
 
 const convertDocToObj = (doc) => {
   doc._id = doc._id.toString();
+  doc.createdAt = JSON.parse(JSON.stringify(doc.createdAt));
+  doc.updateddAt = JSON.parse(JSON.stringify(doc.updatedAt));
   return doc;
 };
 
