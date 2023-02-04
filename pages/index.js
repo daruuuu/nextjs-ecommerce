@@ -6,9 +6,18 @@ import { useContext } from "react";
 import { Store } from "@/utils/Store";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { Carousel } from "react-responsive-carousel";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import Link from "next/link";
 
-export default function Home({ productsLists }) {
+export default function Home({ productsLists, featuredProducts }) {
   const { state, dispatch } = useContext(Store);
+  const featured = [];
+  featuredProducts.map((product) => {
+    if (product.isFeatured === true) {
+      featured.push(product);
+    }
+  });
 
   const addToCartHandler = async (productData) => {
     const existItem = state.cart.cartItems.find(
@@ -27,6 +36,25 @@ export default function Home({ productsLists }) {
 
   return (
     <Layout title="Home Page">
+      <Carousel showThumbs={false} autoPlay className="mb-4">
+        {featured.map((product) => (
+          <div key={product._id}>
+            <Link href={`/product/${product.slug}`} passHref>
+              <div className="flex">
+                <img
+                  style={{
+                    maxHeight: "45vh",
+                    width: "100%",
+                    objectFit: "cover",
+                  }}
+                  src={product.banner}
+                  alt={product.name}
+                />
+              </div>
+            </Link>
+          </div>
+        ))}
+      </Carousel>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
         {productsLists.map((products) => (
           <ProductItem
@@ -44,8 +72,11 @@ export const getServerSideProps = async () => {
   await db.connect();
   const productsList = await Product.find().lean();
   const productsLists = JSON.parse(JSON.stringify(productsList));
+  const featuredProduct = await Product.find({ isFeatured: true }).lean();
+  const featuredProducts = JSON.parse(JSON.stringify(featuredProduct));
   return {
     props: {
+      featuredProducts: featuredProducts.map(db.convertDocToObj),
       productsLists: productsLists.map(db.convertDocToObj),
     },
   };
