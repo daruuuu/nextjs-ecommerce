@@ -9,10 +9,14 @@ import { ToastContainer } from "react-toastify";
 import { Menu } from "@headlessui/react";
 import DropdownLink from "@/components/DropdownLink/DropdownLink";
 import Cookies from "js-cookie";
+import { useRouter } from "next/router";
+import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 
 const Layout = (props) => {
   const { status, data: session } = useSession();
   const { state, dispatch } = useContext(Store);
+  const [query, setQuery] = useState("");
+  const router = useRouter();
   const { cart } = state;
   const [cartItemsTotal, setCartItemsTotal] = useState(0);
 
@@ -26,6 +30,10 @@ const Layout = (props) => {
     signOut({ callbackUrl: "/login" });
   };
 
+  const submitHandler = (e) => {
+    e.preventDefault();
+    router.push(`/search?query=${query}`);
+  };
   return (
     <>
       <Head>
@@ -43,6 +51,20 @@ const Layout = (props) => {
             <Link href="/">
               <p className="text-lg font-bold">Larola</p>
             </Link>
+            <form
+              onSubmit={submitHandler}
+              className="mx-auto hidden w-full justify-center md:flex"
+            >
+              <input
+                type="text"
+                className="rounder-tr-none rounded-br-none p-1 text-sm focus:ring-0"
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search product"
+              />
+              <button className="rounded rounded-tl-none rounded-bl-none bg-amber-300 p-1 text-sm dark:text-black">
+                <MagnifyingGlassIcon className="h-5 w-5" />
+              </button>
+            </form>
             <div className="flex">
               <Link href="/cart">
                 <p className="p-2 ">

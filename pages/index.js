@@ -1,8 +1,9 @@
+/* eslint-disable @next/next/no-img-element */
 import Layout from "@/components/Layout/Layout";
 import ProductItem from "@/components/ProductItem/ProductItem";
 import db from "@/utils/db";
 import Product from "@/models/Product";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Store } from "@/utils/Store";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -12,12 +13,16 @@ import Link from "next/link";
 
 export default function Home({ productsLists, featuredProducts }) {
   const { state, dispatch } = useContext(Store);
+  const [category, setCategory] = useState("");
   const featured = [];
   featuredProducts.map((product) => {
     if (product.isFeatured === true) {
       featured.push(product);
     }
   });
+  const categoryList = [
+    ...new Map(productsLists.map((item) => [item["category"], item])).values(),
+  ];
 
   const addToCartHandler = async (productData) => {
     const existItem = state.cart.cartItems.find(
@@ -55,14 +60,39 @@ export default function Home({ productsLists, featuredProducts }) {
           </div>
         ))}
       </Carousel>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
-        {productsLists.map((products) => (
-          <ProductItem
-            addToCartHandler={addToCartHandler}
-            product={products}
+
+      <div className="flex gap-2 mb-4">
+        <button className="category-button" onClick={() => setCategory("")}>
+          All Category
+        </button>
+        {categoryList.map((products) => (
+          <button
+            className="category-button"
             key={products.slug}
-          ></ProductItem>
+            onClick={() => setCategory(products.category)}
+          >
+            {products.category}
+          </button>
         ))}
+      </div>
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
+        {category
+          ? productsLists
+              .filter((product) => product.category === category)
+              .map((products) => (
+                <ProductItem
+                  addToCartHandler={addToCartHandler}
+                  product={products}
+                  key={products.slug}
+                ></ProductItem>
+              ))
+          : productsLists.map((products) => (
+              <ProductItem
+                addToCartHandler={addToCartHandler}
+                product={products}
+                key={products.slug}
+              ></ProductItem>
+            ))}
       </div>
     </Layout>
   );
