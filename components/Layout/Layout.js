@@ -79,7 +79,7 @@ const Layout = (props) => {
               {status === "loading" ? (
                 <p className="p-2 ">Loading...</p>
               ) : session?.user ? (
-                <Menu as="p" className="relative inline-block">
+                <Menu as="p" className="relative inline-block z-50">
                   <Menu.Button className="p-2">{session.user.name}</Menu.Button>
                   <Menu.Items className="absolute right-0 w-56 origin-top-right bg-white shadow-md ">
                     <Menu.Item>

@@ -61,7 +61,7 @@ export default function Home({ productsLists, featuredProducts }) {
         ))}
       </Carousel>
 
-      <div className="flex gap-2 mb-4">
+      <div className="flex flex-wrap mb-4 gap-2">
         <button className="category-button" onClick={() => setCategory("")}>
           All Category
         </button>

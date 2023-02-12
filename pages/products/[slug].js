@@ -100,7 +100,8 @@ export const getServerSideProps = async (context) => {
   const { params } = context;
   const { slug } = params;
   await db.connect();
-  const productData = await Product.findOne({ slug }).lean();
+  const product = await Product.findOne({ slug }).lean();
+  const productData = JSON.parse(JSON.stringify(product));
   return {
     props: {
       productData: productData ? db.convertDocToObj(productData) : null,
