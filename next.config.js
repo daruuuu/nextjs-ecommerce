@@ -9,7 +9,7 @@ const nextConfig = {
     return [
       {
         source: "/api/:path*",
-        destination: "https://api.nextjs-ecommerce-six-psi.vercel.app//:path*",
+        destination: "https://api.example.com/:path*",
       },
     ];
   },
