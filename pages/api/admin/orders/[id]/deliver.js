@@ -4,7 +4,7 @@ import { getSession } from "next-auth/react";
 
 const handler = async (req, res) => {
   const session = await getSession({ req });
-  if (!session || !session.user.isAdmin) {
+  if (!session || (session && !session.user.isAdmin)) {
     res.status(401).send({ message: "Unauthorized" });
   }
 
