@@ -1,20 +1,15 @@
 /** @type {import('next').NextConfig} */
-const securityHeaders = [
-  {
-    key: "Referrer-Policy",
-    value: "origin-when-cross-origin",
-  },
-];
+
 const nextConfig = {
   reactStrictMode: true,
   images: {
     domains: ["res.cloudinary.com"],
   },
-  async headers() {
+  async rewrites() {
     return [
       {
-        source: "/:path*",
-        headers: securityHeaders,
+        source: "/api/:path*",
+        destination: "https://api.nextjs-ecommerce-six-psi.vercel.app//:path*",
       },
     ];
   },
