@@ -199,7 +199,7 @@ const Order = () => {
                     <div>${totalPrice}</div>
                   </div>
                 </li>
-                {!isPaid && (
+                {session.user.isAdmin && !order.isPaid && (
                   <li>
                     {loadingPay ? (
                       <Loading />
