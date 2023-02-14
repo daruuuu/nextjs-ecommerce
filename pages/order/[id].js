@@ -1,4 +1,3 @@
-import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
 import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
@@ -13,7 +12,6 @@ import { useSession } from "next-auth/react";
 
 const Order = () => {
   const { data: session } = useSession();
-  const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
   const { query } = useRouter();
   const orderId = query.id;
 
@@ -54,24 +52,11 @@ const Order = () => {
       if (successPay) {
         dispatch({ type: "PAY_RESET" });
       }
-      // if (successDeliver) {
-      //   dispatch({ type: "DELIVER_RESET" });
-      // }
-    } else {
-      const loadPaypalScript = async () => {
-        const { data: clientId } = await axios.get("/api/keys/paypal");
-        paypalDispatch({
-          type: "resetOptions",
-          value: {
-            "client-id": clientId,
-            currency: "USD",
-          },
-        });
-        paypalDispatch({ type: "setLoadingStatus", value: "pending" });
-      };
-      loadPaypalScript();
+      if (successDeliver) {
+        dispatch({ type: "DELIVER_RESET" });
+      }
     }
-  }, [order, orderId, paypalDispatch, successPay, successDeliver]);
+  }, [order, orderId, successPay, successDeliver]);
 
   const {
     shippingAddress,
@@ -87,40 +72,17 @@ const Order = () => {
     totalPrice,
   } = order;
 
-  const createOrder = (data, actions) => {
-    return actions.order
-      .create({
-        purchase_units: [
-          {
-            amount: {
-              value: totalPrice,
-            },
-          },
-        ],
-      })
-      .then((orderID) => {
-        return orderID;
-      });
-  };
-
-  const onApprove = (data, actions) => {
-    return actions.order.capture().then(async function (details) {
-      try {
-        dispatch({ type: "PAY_REQUEST" });
-        const { data } = await axios.put(
-          `/api/orders/${order._id}/pay`,
-          details
-        );
-        dispatch({ type: "PAY_SUCCESS", payload: data });
-      } catch (err) {
-        dispatch({ type: "PAY_FAIL", payload: getError(err) });
-        toast.error(getError(err));
-      }
-    });
-  };
-
-  const onError = (err) => {
-    toast.error(getError(err));
+  const onApprove = async () => {
+    try {
+      dispatch({ type: "PAY_REQUEST" });
+      const { data } = await axios.put(`/api/orders/${order._id}/pay`, {});
+      dispatch({ type: "PAY_SUCCESS", payload: data });
+      console.log(data);
+      toast.success("Payment Successful");
+    } catch (err) {
+      dispatch({ type: "PAY_FAIL", payload: getError(err) });
+      toast.error(getError(err));
+    }
   };
 
   const deliverHandler = async () => {
@@ -239,19 +201,15 @@ const Order = () => {
                 </li>
                 {!isPaid && (
                   <li>
-                    {isPending ? (
-                      <div className="alert-info">Processing Payment...</div>
+                    {loadingPay ? (
+                      <Loading />
                     ) : (
-                      <div className="w-full">
-                        <PayPalButtons
-                          createOrder={createOrder}
-                          onApprove={onApprove}
-                          onError={onError}
-                        />
-                      </div>
-                    )}
-                    {loadingPay && (
-                      <div className="alert-info">Processing Payment...</div>
+                      <button
+                        className="primary-button w-full mb-2"
+                        onClick={onApprove}
+                      >
+                        Approve Order
+                      </button>
                     )}
                   </li>
                 )}
